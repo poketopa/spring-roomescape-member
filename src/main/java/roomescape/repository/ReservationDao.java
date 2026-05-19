@@ -149,7 +149,8 @@ public class ReservationDao {
         return count != null && count > 0;
     }
 
-    public boolean isExistsByDateAndTimeIdAndThemeIdExcludingId(LocalDate date, Long timeId, Long themeId, Long excludeId) {
+    public boolean isExistsByDateAndTimeIdAndThemeIdExcludingId(LocalDate date, Long timeId, Long themeId,
+                                                                Long excludeId) {
         String sql = """
                 SELECT COUNT(1) FROM reservation
                 WHERE date = ? AND time_id = ? AND theme_id = ? AND id != ?

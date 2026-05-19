@@ -67,7 +67,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleDataIntegrityViolation(DataIntegrityViolationException e) {
-        return new ErrorResponse(ErrorCode.DUPLICATE_RESERVATION.getCode(), "선택하신 날짜/시간/테마에 이미 예약이 있습니다. 다른 시간을 선택해 주세요.");
+        return new ErrorResponse(ErrorCode.DUPLICATE_RESERVATION.getCode(),
+                "선택하신 날짜/시간/테마에 이미 예약이 있습니다. 다른 시간을 선택해 주세요.");
     }
 
     @ExceptionHandler(Exception.class)
