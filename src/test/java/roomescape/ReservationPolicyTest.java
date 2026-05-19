@@ -37,6 +37,7 @@ public class ReservationPolicyTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(400)
+                .body("code", equalTo("PAST_RESERVATION"))
                 .body("message", equalTo("지난 날짜는 예약할 수 없습니다. 오늘 이후 날짜를 선택해주세요."));
     }
 
@@ -54,6 +55,7 @@ public class ReservationPolicyTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(400)
+                .body("code", equalTo("INVALID_INPUT"))
                 .body("message", equalTo("사용자 ID는 필수입니다."));
     }
 
@@ -68,6 +70,7 @@ public class ReservationPolicyTest {
                 .when().delete("/admin/times/1")
                 .then().log().all()
                 .statusCode(409)
+                .body("code", equalTo("RESERVATION_TIME_IN_USE"))
                 .body("message", equalTo("해당 시간에 예약이 존재하여 삭제할 수 없습니다."));
     }
 
@@ -112,6 +115,7 @@ public class ReservationPolicyTest {
                 .when().patch("/reservations/1?userId=2")  // userId=2가 변경 시도
                 .then().log().all()
                 .statusCode(403)
+                .body("code", equalTo("UNAUTHORIZED_RESERVATION"))
                 .body("message", equalTo("본인의 예약만 변경할 수 있습니다."));
     }
 
@@ -131,6 +135,7 @@ public class ReservationPolicyTest {
                 .when().patch("/reservations/999?userId=1")  // 존재하지 않는 예약 ID
                 .then().log().all()
                 .statusCode(404)
+                .body("code", equalTo("RESERVATION_NOT_FOUND"))
                 .body("message", equalTo("존재하지 않는 예약입니다."));
     }
 
@@ -151,6 +156,7 @@ public class ReservationPolicyTest {
                 .when().patch("/reservations/1?userId=1")
                 .then().log().all()
                 .statusCode(400)
+                .body("code", equalTo("PAST_RESERVATION"))
                 .body("message", equalTo("지난 날짜로 변경할 수 없습니다. 오늘 이후 날짜를 선택해 주세요."));
     }
 
@@ -173,6 +179,7 @@ public class ReservationPolicyTest {
                 .when().patch("/reservations/1?userId=1")
                 .then().log().all()
                 .statusCode(409)
+                .body("code", equalTo("DUPLICATE_RESERVATION"))
                 .body("message", equalTo("선택하신 날짜·시간·테마에 이미 예약이 있습니다. 다른 시간을 선택해 주세요."));
     }
 
@@ -195,6 +202,7 @@ public class ReservationPolicyTest {
                 .when().patch("/reservations/1?userId=1")
                 .then().log().all()
                 .statusCode(400)
+                .body("code", equalTo("PAST_RESERVATION"))
                 .body("message", equalTo("지난 예약은 변경하거나 취소할 수 없습니다."));
     }
 
@@ -209,6 +217,7 @@ public class ReservationPolicyTest {
                 .when().delete("/reservations/1?userId=1")
                 .then().log().all()
                 .statusCode(400)
+                .body("code", equalTo("PAST_RESERVATION"))
                 .body("message", equalTo("지난 예약은 변경하거나 취소할 수 없습니다."));
     }
 
