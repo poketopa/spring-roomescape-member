@@ -1,5 +1,6 @@
 package roomescape.exception;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -61,6 +62,12 @@ public class GlobalExceptionHandler {
             return new ErrorResponse(ErrorCode.INVALID_INPUT.getCode(), rootCause.getMessage());
         }
         return new ErrorResponse(ErrorCode.INVALID_REQUEST_FORMAT.getCode(), "잘못된 요청 형식입니다. 입력값을 확인해 주세요.");
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ErrorResponse handleDataIntegrityViolation(DataIntegrityViolationException e) {
+        return new ErrorResponse(ErrorCode.DUPLICATE_RESERVATION.getCode(), "선택하신 날짜/시간/테마에 이미 예약이 있습니다. 다른 시간을 선택해 주세요.");
     }
 
     @ExceptionHandler(Exception.class)
