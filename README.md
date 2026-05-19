@@ -100,7 +100,7 @@ userId = 1, 2, 3 ..
 - [x] 예약이 존재하는 시간 삭제 거부
 - [x] 유효하지 않은 입력값 거부 (빈 이름, null 날짜 등)
 - [x] 500(서버 에러)이 사용자에게 노출되지 않도록 처리
-- [x] 에러 응답 본문을 JSON으로 통일 (`{ "message": "..." }`)
+- [x] 에러 응답 본문을 JSON으로 통일 (`{ "code": "...", "message": "..." }`)
 
 ---
 
@@ -108,6 +108,24 @@ userId = 1, 2, 3 ..
 모든 에러 응답은 아래 형식으로 통일한다.
 ```json
 {
-  "message": "사용자가 이해할 수 있는 메시지"
+  "code": "DUPLICATE_RESERVATION",
+  "message": "선택하신 날짜·시간·테마에 이미 예약이 있습니다. 다른 시간을 선택해 주세요."
 }
 ```
+
+- `code`: 프론트엔드가 에러 종류를 기계적으로 분기하기 위한 고정 식별자. enum 이름과 분리되어 관리되므로 리팩터링에도 API 계약이 유지된다.
+- `message`: 사용자 또는 운영자가 상황을 빠르게 파악하기 위한 자연어 설명.
+
+#### 에러 코드 목록
+
+| code | HTTP 상태 | 설명 |
+|---|---|---|
+| `INVALID_INPUT` | 400 | 유효하지 않은 입력값 (null, 빈 값 등) |
+| `INVALID_REQUEST_FORMAT` | 400 | 잘못된 요청 형식 (JSON 파싱 실패 등) |
+| `PAST_RESERVATION` | 400 | 지난 날짜·시간으로 예약 생성/변경 시도 |
+| `RESERVATION_NOT_FOUND` | 404 | 존재하지 않는 예약 |
+| `RESERVATION_TIME_NOT_FOUND` | 404 | 존재하지 않는 예약 시간 |
+| `UNAUTHORIZED_RESERVATION` | 403 | 본인 예약이 아닌 경우 변경·삭제 시도 |
+| `DUPLICATE_RESERVATION` | 409 | 같은 날짜·시간·테마 중복 예약 시도 |
+| `RESERVATION_TIME_IN_USE` | 409 | 예약이 존재하는 시간 삭제 시도 |
+| `INTERNAL_SERVER_ERROR` | 500 | 서버 내부 오류 |
