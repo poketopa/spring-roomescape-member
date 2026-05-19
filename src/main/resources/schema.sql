@@ -37,6 +37,6 @@ CREATE TABLE reservation
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (time_id) REFERENCES reservation_time (id),
-    FOREIGN KEY (theme_id) REFERENCES theme (id)
-        CONSTRAINT uq_date_time_theme UNIQUE (date, time_id, theme_id)
+    FOREIGN KEY (theme_id) REFERENCES theme (id),
+    CONSTRAINT uq_date_time_theme UNIQUE (date, time_id, theme_id)
 );
