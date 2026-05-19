@@ -134,6 +134,7 @@ public class ReservationTest {
                 .when().post("/reservations")
                 .then().log().all()
                 .statusCode(409)
+                .body("code", equalTo("DUPLICATE_RESERVATION"))
                 .body("message", equalTo("선택하신 날짜·시간·테마에 이미 예약이 있습니다. 다른 시간을 선택해 주세요."));
     }
 
@@ -149,6 +150,7 @@ public class ReservationTest {
                 .when().delete("/reservations/1?userId=2")
                 .then().log().all()
                 .statusCode(403)
+                .body("code", equalTo("UNAUTHORIZED_RESERVATION"))
                 .body("message", equalTo("본인의 예약만 삭제할 수 있습니다."));
     }
 
